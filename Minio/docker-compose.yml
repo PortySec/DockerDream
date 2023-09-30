@@ -1,0 +1,110 @@
+version: "3.9"
+
+# Define volumes for persisting data across container restarts.
+volumes:
+  minio_1_data:
+    driver: local
+  minio_2_data:
+    driver: local
+  minio_3_data:
+    driver: local
+  minio_4_data:
+    driver: local
+
+services:
+  # First MinIO service instance.
+  minio1:
+    # Hostname for the service instance.
+    hostname: minio1
+    # Docker image to use.
+    image: docker.io/bitnami/minio:2023
+    # Ports to expose.
+    ports:
+      - 9000:9000
+      - 9001:9001
+    # Mount the defined volume to the container.
+    volumes:
+      - "minio_1_data:/data"
+    # Environment variables for MinIO configuration.
+    environment:
+      - MINIO_ROOT_USER=root
+      - MINIO_ROOT_PASSWORD=toor
+      - MINIO_DISTRIBUTED_MODE_ENABLED=yes
+      - MINIO_DISTRIBUTED_NODES=minio1,minio2,minio3,minio4
+      - MINIO_SKIP_CLIENT=yes
+    # Deployment configuration for Docker Swarm.
+    deploy:
+      mode: replicated
+      replicas: 1
+      labels:
+        - service_name=distributed-minio1
+      placement:
+        constraints:
+          - node.hostname == {first_server_hostname}
+          - node.labels.zone == minio-zone
+
+  # Second MinIO service instance.
+  minio2:
+    image: docker.io/bitnami/minio:2023
+    hostname: minio2
+    volumes:
+      - "minio_2_data:/data"
+    environment:
+      - MINIO_ROOT_USER=root
+      - MINIO_ROOT_PASSWORD=toor
+      - MINIO_DISTRIBUTED_MODE_ENABLED=yes
+      - MINIO_DISTRIBUTED_NODES=minio1,minio2,minio3,minio4
+      - MINIO_SKIP_CLIENT=yes
+    deploy:
+      mode: replicated
+      replicas: 0
+      labels:
+        - service_name=distributed-minio2
+      placement:
+        constraints:
+          - node.hostname == {second_server_hostname}
+          - node.labels.zone == minio-zone
+
+  # Third MinIO service instance.
+  minio3:
+    image: docker.io/bitnami/minio:2023
+    hostname: minio3
+    volumes:
+      - "minio_3_data:/data"
+    environment:
+      - MINIO_ROOT_USER=root
+      - MINIO_ROOT_PASSWORD=toor
+      - MINIO_DISTRIBUTED_MODE_ENABLED=yes
+      - MINIO_DISTRIBUTED_NODES=minio1,minio2,minio3,minio4
+      - MINIO_SKIP_CLIENT=yes
+    deploy:
+      mode: replicated
+      replicas: 1
+      labels:
+        - service_name=distributed-minio3
+      placement:
+        constraints:
+          - node.hostname == {third_server_hostname}
+          - node.labels.zone == minio-zone
+
+  # Fourth MinIO service instance.
+  minio4:
+    image: docker.io/bitnami/minio:2023
+    hostname: minio4
+    volumes:
+      - "minio_4_data:/data"
+    environment:
+      - MINIO_ROOT_USER=root
+      - MINIO_ROOT_PASSWORD=toor
+      - MINIO_DISTRIBUTED_MODE_ENABLED=yes
+      - MINIO_DISTRIBUTED_NODES=minio1,minio2,minio3,minio4
+      - MINIO_SKIP_CLIENT=yes
+    deploy:
+      mode: replicated
+      replicas: 1
+      labels:
+        - service_name=distributed-minio4
+      placement:
+        constraints:
+          - node.hostname == {fourth_server_hostname}
+          - node.labels.zone == minio-zone
