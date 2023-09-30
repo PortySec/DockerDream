@@ -1,0 +1,83 @@
+global:
+  scrape_interval: 15s
+
+scrape_configs:
+  # HTTP Probe
+  - job_name: "blackbox-http"
+    metrics_path: /probe
+    params:
+      module: [http_2xx] # Use the http_2xx module for checking HTTP status.
+    static_configs:
+      - targets:
+          - http://example.com
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: 127.0.0.1:9115 # Address of HOST which is running the Blackbox Exporter
+
+  # HTTPS Probe
+  - job_name: "blackbox-https"
+    metrics_path: /probe
+    params:
+      module: [http_post_2xx]
+    static_configs:
+      - targets:
+          - https://example.com
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: 127.0.0.1:9115 # Address of HOST which is running the Blackbox Exporter
+
+  # TCP Probe
+  - job_name: "blackbox-tcp"
+    metrics_path: /probe
+    params:
+      module: [tcp_connect]
+    static_configs:
+      - targets:
+          - example.com:80
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: 127.0.0.1:9115 # Address of HOST which is running the Blackbox Exporter
+
+  # ICMP Probe
+  - job_name: "blackbox-icmp"
+    metrics_path: /probe
+    params:
+      module: [icmp]
+    static_configs:
+      - targets:
+          - example.com
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: 127.0.0.1:9115 # Address of HOST which is running the Blackbox Exporter
+
+  # DNS Probe
+  - job_name: "blackbox-dns"
+    metrics_path: /probe
+    params:
+      module: [dns]
+    static_configs:
+      - targets:
+          - dns://example.com
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: 127.0.0.1:9115 # Address of HOST which is running the Blackbox Exporter

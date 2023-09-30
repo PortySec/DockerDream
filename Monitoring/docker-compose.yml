@@ -1,0 +1,227 @@
+version: "3"
+
+services:
+  # =====================================================================================================
+  # ======================= PROMETHEUS ====================
+  prometheus:
+    image: prom/prometheus:latest
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/prometheus
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      # - '--web.listen-address=0.0.0.0:9090' # Address to listen on for UI, API, and telemetry.
+      # - '--web.config.file=/path/to/web/config' # [EXPERIMENTAL] Path to configuration file that can enable TLS or authentication.
+      # - '--web.read-timeout=5m' # Maximum duration before timing out read of the request, and closing idle connections.
+      # - '--web.max-connections=512' # Maximum number of simultaneous connections.
+      # - '--web.external-url=http://example.com' # The URL under which Prometheus is externally reachable.
+      # - '--web.route-prefix=/' # Prefix for the internal routes of web endpoints.
+      # - '--web.user-assets=/path/to/assets' # Path to static asset directory, available at /user.
+      # - '--web.enable-lifecycle' # Enable shutdown and reload via HTTP request.
+      # - '--web.enable-admin-api' # Enable API endpoints for admin control actions.
+      # - '--web.enable-remote-write-receiver' # Enable API endpoint accepting remote write requests.
+      # - '--web.console.templates=/path/to/templates' # Path to the console template directory, available at /consoles.
+      # - '--web.console.libraries=/path/to/libraries' # Path to the console library directory.
+      # - '--web.page-title=Prometheus Server' # Document title of Prometheus instance.
+      # - '--web.cors.origin=http://example.com' # Regex for CORS origin.
+      # - '--storage.tsdb.path=data/' # Base path for metrics storage. Use with server mode only.
+      # - '--storage.tsdb.retention.time=15d' # How long to retain samples in storage.
+      # - '--storage.tsdb.retention.size=512MB' # Maximum number of bytes that can be stored for blocks.
+      # - '--storage.tsdb.no-lockfile' # Do not create lockfile in data directory.
+      # - '--storage.tsdb.head-chunks-write-queue-size=0' # Size of the queue through which head chunks are written to the disk.
+      # - '--storage.remote.flush-deadline=1m' # How long to wait flushing sample on shutdown or config reload.
+      # - '--storage.remote.read-sample-limit=50000000' # Maximum overall number of samples to return via the remote read interface.
+      # - '--storage.remote.read-concurrent-limit=10' # Maximum number of concurrent remote read calls.
+      # - '--storage.remote.read-max-bytes-in-frame=1048576' # Maximum number of bytes in a single frame for streaming remote read response types.
+      # - '--rules.alert.for-outage-tolerance=1h' # Max time to tolerate prometheus outage for restoring "for" state of alert.
+      # - '--rules.alert.for-grace-period=10m' # Minimum duration between alert and restored "for" state.
+      # - '--rules.alert.resend-delay=1m' # Minimum amount of time to wait before resending an alert to Alertmanager.
+      # - '--alertmanager.notification-queue-capacity=10000' # The capacity of the queue for pending Alertmanager notifications.
+      # - '--query.lookback-delta=5m' # The maximum lookback duration for retrieving metrics during expression evaluations.
+      # - '--query.timeout=2m' # Maximum time a query may take before being aborted.
+      # - '--query.max-concurrency=20' # Maximum number of queries executed concurrently.
+      # - '--query.max-samples=50000000' # Maximum number of samples a single query can load into memory.
+      # - '--enable-feature=feature_name' # Comma separated feature names to enable.
+      # - '--log.level=info' # Only log messages with the given severity or above.
+      # - '--log.format=logfmt' # Output format of log messages.
+    deploy:
+      mode: replicated # Specifies the mode of service deployment. Can be 'replicated' or 'global'.
+      replicas: 1 # Number of instances of the service to run.
+      labels:
+        - "service_name=prometheus"
+      update_config:
+        parallelism: 1 # Number of containers to update at a time.
+        delay: 10s # Delay between updates.
+        failure_action: continue # What to do if an update fails. Can be 'continue' or 'rollback'.
+        monitor: 5s # Duration to monitor health after an update.
+        max_failure_ratio: 0.3 # Fraction of tasks that may fail during an update.
+        order: start-first # Order of operations during updates. Can be 'start-first' or 'stop-first'.
+      rollback_config:
+        parallelism: 1
+        delay: 10s
+        failure_action: pause
+        monitor: 5s
+        max_failure_ratio: 0.3
+        order: stop-first
+      placement:
+        constraints:
+          - node.role == manager # Ensures the service runs on manager nodes.
+        preferences:
+          - spread: node.labels.zone # Spread the service tasks based on node label 'zone'.
+      resources:
+        limits:
+          cpus: "0.50"
+          memory: 256M
+        reservations:
+          cpus: "0.25"
+          memory: 128M
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 2
+        window: 120s
+      endpoint_mode: vip # Mode of service discovery. Can be 'vip' (Virtual IP) or 'dnsrr' (DNS round-robin)
+
+  # =====================================================================================================
+  # ======================= GRAFANA ====================
+
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana_data:/var/lib/grafana
+    environment:
+      # Basic auth configuration
+      # - 'GF_AUTH_BASIC_ENABLED=true' # Enable basic authentication.
+      # - 'GF_AUTH_ANONYMOUS_ENABLED=false' # Enable anonymous access.
+      # - 'GF_AUTH_ANONYMOUS_ORG_NAME=Main Org.' # Organization name that will be used for the anonymous user.
+      # - 'GF_AUTH_ANONYMOUS_ORG_ROLE=Viewer' # Role for the anonymous user.
+
+      # Admin user configuration
+      - "GF_SECURITY_ADMIN_USER=admin" # Admin user for Grafana.
+      - "GF_SECURITY_ADMIN_PASSWORD=secret" # Admin password for Grafana.
+      # - 'GF_SECURITY_ADMIN_EMAIL=admin@localhost' # Admin email address.
+
+      # Database configuration
+      # - 'GF_DATABASE_TYPE=sqlite3' # Type of database to use (mysql, postgres, sqlite3).
+      # - 'GF_DATABASE_HOST=db' # Database host.
+      # - 'GF_DATABASE_NAME=grafana' # Database name.
+      # - 'GF_DATABASE_USER=grafana' # Database user.
+      # - 'GF_DATABASE_PASSWORD=secret' # Database password.
+      # - 'GF_DATABASE_SSL_MODE=disable' # SSL mode for database connection (disable, require, verify-full).
+
+      # Paths
+      # - 'GF_PATHS_DATA=/var/lib/grafana' # Path to where Grafana stores the sqlite3 database and other session data.
+      # - 'GF_PATHS_LOGS=/var/log/grafana' # Path to log files.
+      # - 'GF_PATHS_PLUGINS=/var/lib/grafana/plugins' # Path to plugins.
+      # - 'GF_PATHS_PROVISIONING=/etc/grafana/provisioning' # Path to provisioning config files.
+
+      # Server configuration
+      # - 'GF_SERVER_DOMAIN=localhost' # Domain name to access Grafana.
+      # - 'GF_SERVER_ROOT_URL=%(protocol)s://%(domain)s:%(http_port)s/' # Full public facing URL.
+      # - 'GF_SERVER_SERVE_FROM_SUB_PATH=false' # Serve Grafana from a subpath specified in `root_url` setting.
+      # - 'GF_SERVER_ENABLE_GZIP=false' # Enable gzip.
+
+      # SMTP / Emailing
+      # - 'GF_SMTP_ENABLED=false' # Enable SMTP (emailing).
+      # - 'GF_SMTP_HOST=smtp.gmail.com:465' # SMTP server address.
+      # - 'GF_SMTP_USER=myuser' # SMTP username.
+      # - 'GF_SMTP_PASSWORD=mypassword' # SMTP password.
+      # - 'GF_SMTP_FROM_ADDRESS=admin@grafana.localhost' # From address for emails.
+
+      # Other configurations can be added as needed.
+    deploy:
+      mode: replicated # Specifies the mode of service deployment. Can be 'replicated' or 'global'.
+      replicas: 1 # Number of instances of the service to run.
+      labels:
+        - "service_name=grafana"
+      update_config:
+        parallelism: 1 # Number of containers to update at a time.
+        delay: 10s # Delay between updates.
+        failure_action: continue # What to do if an update fails. Can be 'continue' or 'rollback'.
+        monitor: 5s # Duration to monitor health after an update.
+        max_failure_ratio: 0.3 # Fraction of tasks that may fail during an update.
+        order: start-first # Order of operations during updates. Can be 'start-first' or 'stop-first'.
+      rollback_config:
+        parallelism: 1
+        delay: 10s
+        failure_action: pause
+        monitor: 5s
+        max_failure_ratio: 0.3
+        order: stop-first
+      placement:
+        constraints:
+          - node.role == manager # Ensures the service runs on manager nodes.
+        preferences:
+          - spread: node.labels.zone # Spread the service tasks based on node label 'zone'.
+      resources:
+        limits:
+          cpus: "0.50"
+          memory: 256M
+        reservations:
+          cpus: "0.25"
+          memory: 128M
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+      endpoint_mode: vip
+
+  # =====================================================================================================
+  # ======================= BLACKBOX-EXPORTER ====================
+
+  blackbox-exporter:
+    image: prom/blackbox-exporter:latest
+    environment:
+      - config.file="/etc/blackbox_exporter/config.yml"
+    ports:
+      - 9115:9115
+    volumes:
+      - ./blackbox/blackbox.yml:/etc/blackbox_exporter/config.yml
+    deploy:
+      mode: replicated # Specifies the mode of service deployment. Can be 'replicated' or 'global'.
+      replicas: 1 # Number of instances of the service to run.
+      labels:
+        - "service_name=blackbox-exporter"
+      update_config:
+        parallelism: 1 # Number of containers to update at a time.
+        delay: 10s # Delay between updates.
+        failure_action: continue # What to do if an update fails. Can be 'continue' or 'rollback'.
+        monitor: 5s # Duration to monitor health after an update.
+        max_failure_ratio: 0.3 # Fraction of tasks that may fail during an update.
+        order: start-first # Order of operations during updates. Can be 'start-first' or 'stop-first'.
+      rollback_config:
+        parallelism: 1
+        delay: 10s
+        failure_action: pause
+        monitor: 5s
+        max_failure_ratio: 0.3
+        order: stop-first
+      placement:
+        constraints:
+          - node.role == manager # Ensures the service runs on manager nodes.
+        preferences:
+          - spread: node.labels.zone # Spread the service tasks based on node label 'zone'.
+      resources:
+        limits:
+          cpus: "0.50"
+          memory: 256M
+        reservations:
+          cpus: "0.25"
+          memory: 128M
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 2
+        window: 120s
+      endpoint_mode: vip # Mode of service discovery. Can be 'vip' (Virtual IP) or 'dnsrr' (DNS round-robin)
+
+volumes:
+  prometheus_data:
+    driver: local
+  grafana_data:
+    driver: local
