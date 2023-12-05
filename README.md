@@ -10,6 +10,7 @@ This repository provides a collection of Docker Compose configurations tailored 
 - [Services](#services)
   - [Distributed MinIO](#distributed-minio)
   - [MongoDB Replica](#mongodb-replica)
+  - [Netishot](#netishot)
   - [Monitoring System](#monitoring-system)
   - [Others (Coming Soon)](#others-coming-soon)
 - [Usage](#usage)
@@ -38,7 +39,13 @@ A high-performance, Kubernetes-native object storage suite. The provided configu
 
 (Placeholder for MongoDB replica details. You can expand on this when you add the MongoDB replica configuration.)
 
-- [Detailed README and Configuration](./moniroring/README.md)
+- [Detailed README and Configuration](./Monitoring/README.md)
+
+### Netishot
+
+(A simple lightweight docker image that can be used to troubleshoot your containers Connectivity issues)
+
+- [Detailed README and Configuration](./netishot/README.md)
 
 ### Others (Coming Soon)
 
