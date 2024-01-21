@@ -68,8 +68,4 @@ Stay tuned for more service configurations tailored for Docker Swarm!
 
 Contributions are welcome! If you have improvements, bug fixes, or new configurations to add, please submit a pull request or open an issue.
 
-## License
 
-(You can specify a license here, e.g., MIT, Apache 2.0, etc. If you're unsure about which license to use, the MIT License is a popular choice for public repositories.)
-
----
