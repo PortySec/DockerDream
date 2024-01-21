@@ -60,8 +60,8 @@ Stay tuned for more service configurations tailored for Docker Swarm!
 
 ## Usage
 
-1. Clone this repository:
-2. Navigate to the desired service directory:
+1. Clone this repository
+2. Navigate to the desired service directory
 3. Follow the specific README instructions for the chosen service.
 
 ## Contributing
