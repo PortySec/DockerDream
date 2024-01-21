@@ -1,0 +1,35 @@
+version: '3.6'
+
+services:
+  gitlab:
+    # Official GitLab Docker Image
+    image: gitlab/gitlab-ee:latest
+
+    # Container will restart automatically unless stopped
+    restart: always
+    
+    # Naming our container for easier reference
+    container_name: gitlab
+    
+    # Setting the hostname for the container
+    hostname: gitlab.example.com
+
+    # Environment variables for GitLab configuration
+    environment:
+      GITLAB_SSH_PORT: 10022
+      GITLAB_OMNIBUS_CONFIG: |
+        external_url 'http://gitlab.example.com:1433'
+
+    # Mapping ports from container to host
+    ports:
+      - '1433:1433' # HTTP access to GitLab, change '1433' to your desired host port
+      - '10022:22'  # SSH access to GitLab repositories, change '10022' to your desired host port
+
+    # Mounting volumes for persistent data storage
+    volumes:
+      - './config:/etc/gitlab' # Configuration files
+      - './logs:/var/log/gitlab' # Log files
+      - './data:/var/opt/gitlab' # Data files including repositories
+
+    # Shared memory size configuration
+    shm_size: '256m'
