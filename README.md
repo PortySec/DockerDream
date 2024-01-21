@@ -12,7 +12,7 @@ This repository provides a collection of Docker Compose configurations tailored 
   - [MongoDB Replica](#mongodb-replica)
   - [Netishot](#netishot)
   - [Monitoring System](#monitoring-system)
-  - [Gitlab Docker](#gitlab-docker-setup)
+  - [Gitlab Docker Setup](#gitlab-docker-setup)
   - [Others (Coming Soon)](#others-coming-soon)
 - [Usage](#usage)
 - [Contributing](#contributing)
@@ -47,13 +47,13 @@ A high-performance, Kubernetes-native object storage suite. The provided configu
 (A simple lightweight docker image that can be used to troubleshoot your containers Connectivity issues)
 
 - [Detailed README and Configuration](./netishot/README.md)
-- 
+
 ### GitLab Docker Setup
 
 (A robust and efficient Docker Compose setup for deploying GitLab, ideal for ensuring quick and reliable GitLab deployment in a containerized environment)
 
 - [Detailed README and Configuration](./gitlab-docker/README.md)
-- 
+
 ### Others (Coming Soon)
 
 Stay tuned for more service configurations tailored for Docker Swarm!
