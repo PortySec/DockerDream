@@ -12,6 +12,7 @@ This repository provides a collection of Docker Compose configurations tailored 
   - [MongoDB Replica](#mongodb-replica)
   - [Netishot](#netishot)
   - [Monitoring System](#monitoring-system)
+  - [Gitlab Docker](#gitlab-docker-setup)
   - [Others (Coming Soon)](#others-coming-soon)
 - [Usage](#usage)
 - [Contributing](#contributing)
