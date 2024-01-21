@@ -46,7 +46,13 @@ A high-performance, Kubernetes-native object storage suite. The provided configu
 (A simple lightweight docker image that can be used to troubleshoot your containers Connectivity issues)
 
 - [Detailed README and Configuration](./netishot/README.md)
+- 
+### GitLab Docker Setup
 
+(A robust and efficient Docker Compose setup for deploying GitLab, ideal for ensuring quick and reliable GitLab deployment in a containerized environment)
+
+- [Detailed README and Configuration](./gitlab-docker/README.md)
+- 
 ### Others (Coming Soon)
 
 Stay tuned for more service configurations tailored for Docker Swarm!
@@ -54,18 +60,7 @@ Stay tuned for more service configurations tailored for Docker Swarm!
 ## Usage
 
 1. Clone this repository:
-
-   ```bash
-   git clone [repository-url]
-   cd [repository-dir]
-   ```
-
 2. Navigate to the desired service directory:
-
-   ```bash
-   cd [service-directory]
-   ```
-
 3. Follow the specific README instructions for the chosen service.
 
 ## Contributing
