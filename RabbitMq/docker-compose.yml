@@ -1,0 +1,70 @@
+version: "3.7"
+
+services:
+  # RabbitMQ Service - Node 1
+  rabbitmq-1:
+    image: rabbitmq:latest
+    hostname: "rabbitmq-1"
+    ports:
+      - "5672:5672" # AMQP port
+      - "15672:15672"
+    volumes:
+      - rabbitmq-data-1:/var/lib/rabbitmq # Local volume with local driver for RabbitMQ data
+      - ./rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf
+    environment:
+      - RABBITMQ_ERLANG_COOKIE="CHANGE_THIS_TOKEN"
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: none
+      placement:
+        constraints: [node.role == manager]
+    networks:
+      - rabbitmq-net
+
+  # RabbitMQ Service - Node 2
+  rabbitmq-2:
+    image: rabbitmq:latest
+    hostname: "rabbitmq-2"
+    volumes:
+      - rabbitmq-data-2:/var/lib/rabbitmq # Local volume with local driver for RabbitMQ data
+      - ./rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf
+    environment:
+      - RABBITMQ_ERLANG_COOKIE="CHANGE_THIS_TOKEN"
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: none
+      placement:
+        constraints: [node.role == manager]
+    networks:
+      - rabbitmq-net
+
+  # RabbitMQ Service - Node 3
+  rabbitmq-3:
+    image: rabbitmq:latest
+    hostname: "rabbitmq-3"
+    volumes:
+      - rabbitmq-data-3:/var/lib/rabbitmq # Local volume with local driver for RabbitMQ data
+      - ./rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf
+    environment:
+      - RABBITMQ_ERLANG_COOKIE="CHANGE_THIS_TOKEN"
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: none
+      placement:
+        constraints: [node.role == manager]
+    networks:
+      - rabbitmq-net
+
+networks:
+  rabbitmq-net: # Custom network for RabbitMQ services
+
+volumes:
+  rabbitmq-data-1:
+    driver: local # Specify local volume driver
+  rabbitmq-data-2:
+    driver: local # Specify local volume driver
+  rabbitmq-data-3:
+    driver: local # Specify local volume driver

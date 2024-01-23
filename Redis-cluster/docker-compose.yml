@@ -1,0 +1,96 @@
+version: "3.8"
+
+services:
+  redis-1:
+    image: redis:latest
+    hostname: redis-1
+    command: redis-server  /usr/local/etc/redis/redis.conf
+    volumes:
+      - ./redis.conf:/usr/local/etc/redis/redis.conf
+    networks:
+      - redis-net
+    deploy:
+      placement:
+        constraints: [node.role == manager]
+
+  redis-2:
+    image: redis:latest
+    hostname: redis-2
+    command: redis-server  /usr/local/etc/redis/redis.conf
+    volumes:
+      - ./redis.conf:/usr/local/etc/redis/redis.conf
+    networks:
+      - redis-net
+    deploy:
+      placement:
+        constraints: [node.role == manager]
+
+  redis-3:
+    image: redis:latest
+    hostname: redis-3
+    command: redis-server  /usr/local/etc/redis/redis.conf
+    volumes:
+      - ./redis.conf:/usr/local/etc/redis/redis.conf
+    networks:
+      - redis-net
+    deploy:
+      placement:
+        constraints: [node.role == manager]
+
+  redis-4:
+    image: redis:latest
+    hostname: redis-4
+    command: redis-server  /usr/local/etc/redis/redis.conf
+    volumes:
+      - ./redis.conf:/usr/local/etc/redis/redis.conf
+    networks:
+      - redis-net
+    deploy:
+      placement:
+        constraints: [node.role == manager]
+
+  redis-5:
+    image: redis:latest
+    hostname: redis-5
+    command: redis-server  /usr/local/etc/redis/redis.conf
+    volumes:
+      - ./redis.conf:/usr/local/etc/redis/redis.conf
+    networks:
+      - redis-net
+    deploy:
+      placement:
+        constraints: [node.role == manager]
+
+  redis-6:
+    image: redis:latest
+    hostname: redis-6
+    command: redis-server  /usr/local/etc/redis/redis.conf
+    volumes:
+      - ./redis.conf:/usr/local/etc/redis/redis.conf
+    networks:
+      - redis-net
+    deploy:
+      placement:
+        constraints: [node.role == manager]
+
+  redis-init:
+    image: redis:latest
+    hostname: redis-init
+    volumes:
+      - ./init-cluster.sh:/usr/local/bin/init-cluster.sh
+    command: >
+      bash -c "/usr/local/bin/init-cluster.sh"
+    networks:
+      - redis-net
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: none
+      placement:
+        constraints: [node.role == manager]
+networks:
+  redis-net:
+    driver: overlay
+
+volumes:
+  redis-data:
