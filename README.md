@@ -14,6 +14,7 @@ This repository provides a collection of Docker Compose configurations tailored 
   - [Monitoring System](#monitoring-system)
   - [Gitlab Docker Setup](#gitlab-docker-setup)
   - [Redis Cluster](#redis-cluster-setup)
+  - [RabbitMq Cluster](#rabbitmq-cluster-setup)
   - [Others (Coming Soon)](#others-coming-soon)
 - [Usage](#usage)
 - [Contributing](#contributing)
@@ -60,6 +61,12 @@ A high-performance, Kubernetes-native object storage suite. The provided configu
 (A scalable and efficient Docker Swarm setup for deploying a Redis Cluster, designed to provide a robust and easy-to-manage Redis deployment in a containerized environment)
 
 - [Detailed README and Configuration](./Redis-cluster/README.md)
+
+### Rabbitmq Cluster Setup
+
+(A scalable and reliable Docker Swarm setup for deploying a RabbitMQ Cluster, crafted to ensure a robust, manageable, and efficient messaging system in a containerized environment)
+
+- [Detailed README and Configuration](./RabbitMq/README.md)
 ### Others (Coming Soon)
 
 Stay tuned for more service configurations tailored for Docker Swarm!
