@@ -73,8 +73,3 @@ We welcome contributions! Please fork the repository and submit a pull request w
 
 
 
-This project is open-source and available under the [MIT License](LICENSE).
-
----
-
-This README provides a clear overview and instructions tailored for a Docker Swarm environment. You can adjust or add more details specific to your project's needs.
