@@ -15,6 +15,7 @@ This repository provides a collection of Docker Compose configurations tailored 
   - [Gitlab Docker Setup](#gitlab-docker-setup)
   - [Redis Cluster](#redis-cluster-setup)
   - [RabbitMq Cluster](#rabbitmq-cluster-setup)
+  - [Nexus Registry](#nexus-registry)
   - [Others (Coming Soon)](#others-coming-soon)
 - [Usage](#usage)
 - [Contributing](#contributing)
@@ -67,6 +68,13 @@ A high-performance, Kubernetes-native object storage suite. The provided configu
 (A scalable and reliable Docker Swarm setup for deploying a RabbitMQ Cluster, crafted to ensure a robust, manageable, and efficient messaging system in a containerized environment)
 
 - [Detailed README and Configuration](./RabbitMq/README.md)
+
+### Nexus Registry
+
+A Docker Swarm setup for deploying Nexus Repository Manager, which acts as a universal repository supporting various formats, including Docker images. This configuration also includes an HAProxy setup for load balancing and SSL termination.
+
+- [Detailed README and Configuration](./Nexus-Registry/README.md)
+
 ### Others (Coming Soon)
 
 Stay tuned for more service configurations tailored for Docker Swarm!
@@ -80,5 +88,3 @@ Stay tuned for more service configurations tailored for Docker Swarm!
 ## Contributing
 
 Contributions are welcome! If you have improvements, bug fixes, or new configurations to add, please submit a pull request or open an issue.
-
-
