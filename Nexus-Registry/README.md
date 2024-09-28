@@ -14,8 +14,8 @@ This repository contains a Docker Compose configuration for deploying Nexus Repo
    Clone the repository to your local machine:
 
    ```bash
-   git clone <your-repo-url>
-   cd <your-repo-directory>
+   git clone https://github.com/PortySec/DockerDream.git
+   cd ./Nexus-Registry
    ```
 
 2. **Create the HAProxy Configuration File**
